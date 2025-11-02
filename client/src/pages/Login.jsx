@@ -114,7 +114,7 @@ const Login = () => {
                 <Input
                   type="text"
                   name="name"
-                  value={signupInput.name}
+                  value={signupInput?.name}
                   onChange={(e) => changeInputHandler(e, "signup")}
                   placeholder="Eg-ayush"
                   required
@@ -125,7 +125,7 @@ const Login = () => {
                 <Input
                   type="email"
                   name="email"
-                  value={signupInput.email}
+                  value={signupInput?.email}
                   onChange={(e) => changeInputHandler(e, "signup")}
                   placeholder="Eg-abc@gmail.com"
                   required
@@ -136,7 +136,7 @@ const Login = () => {
                 <Input
                   type="password"
                   name="password"
-                  value={signupInput.password}
+                  value={signupInput?.password}
                   onChange={(e) => changeInputHandler(e, "signup")}
                   placeholder="Eg-xyz"
                   required

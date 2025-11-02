@@ -48,7 +48,7 @@ const CourseDetail = () => {
           <p>
             Created By{" "}
             <span className="text-[#C0C4FC] underline italic">
-              {course?.creator.name}
+              {course?.creator?.name}
             </span>
           </p>
           <div className="flex items-center gap-2 text-sm">
