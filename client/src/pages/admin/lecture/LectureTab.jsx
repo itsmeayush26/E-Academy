@@ -21,7 +21,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-const MEDIA_API = "https://learn-academy-backend.onrender.com/api/v1/media";
+const MEDIA_API = "http://localhost:8080/api/v1/media";
 
 const LectureTab = () => {
   const [lectureTitle, setLectureTitle] = useState("");
@@ -71,7 +71,7 @@ const LectureTab = () => {
 
       if (res.data.success) {
         setUploadVideoInfo({
-          videoUrl: res.data.data.secure_url,
+          videoUrl: res.data.data.url,
           publicId: res.data.data.public_id,
         });
         toast.success(res.data.message);
