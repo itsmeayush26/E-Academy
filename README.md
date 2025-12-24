@@ -1,11 +1,7 @@
 📚 Learn Academy – Advanced Learning Management System 🚀
 
-
 🔗 Live Demo
-https://learn-academy-frontend.onrender.com
-
-
-
+https://learn-academy-frontend.on.com
 
 🚀 Tech Stack
 MongoDB + Mongoose
@@ -50,7 +46,6 @@ Powerful rich-text editor designed for interactive lessons
 
 Custom formatting with drag-and-drop capabilities
 
-
 ✨ Features
 🔑 Authentication & User Management
 JWT-based authentication → Ensures secure login & session management
@@ -72,12 +67,10 @@ Announcements & discussions → Instructors post updates & students interact
 
 Instructor Q&A sessions → Real-time messaging system for queries
 
-
 💰 Payment Integration
 Stripe API integration → Secure payments with multiple gateway options
 
 Admin transaction tracking → Dashboard for monitoring sales & refunds
-
 
 📂 Folder Structure
 Client (Frontend) → UI components, pages, Redux slices, RTK Query APIs
@@ -87,15 +80,15 @@ Server (Backend) → Controllers, models, routes, authentication middleware
 📂 Folder Structure
 Learn-Academy/
 │── client/ (React App)
-│   ├── components/ (Reusables)
-│   ├── features/ (Redux slices & RTK Query APIs)
-│   ├── pages/ (Main views)
-│   ├── routes/ (Navigation setup)
-│   ├── utils/ (Helpers & constants)
-│   └── App.jsx
+│ ├── components/ (Reusables)
+│ ├── features/ (Redux slices & RTK Query APIs)
+│ ├── pages/ (Main views)
+│ ├── routes/ (Navigation setup)
+│ ├── utils/ (Helpers & constants)
+│ └── App.jsx
 │── server/ (Backend API)
-│   ├── controllers/ (Logic for requests)
-│   ├── models/ (MongoDB schemas)
-│   ├── routes/ (API endpoints)
-│   ├── middleware/ (Auth, logging, error handling)
-│   └── server.js
+│ ├── controllers/ (Logic for requests)
+│ ├── models/ (MongoDB schemas)
+│ ├── routes/ (API endpoints)
+│ ├── middleware/ (Auth, logging, error handling)
+│ └── server.js
