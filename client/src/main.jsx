@@ -5,11 +5,12 @@ import { Provider } from "react-redux";
 import App from "./App.jsx";
 import { appStore } from "./app/store";
 import "./index.css";
+import axios from "axios";
 import { useLoadUserQuery } from "./features/api/authApi.js";
 import LoadingSpinner from "./components/LoadingSpinner.jsx";
 
 
-
+axios.defaults.withCredentials = true;
 const Custom = ({ children }) => {
   const { isLoading } = useLoadUserQuery();
   return <>
