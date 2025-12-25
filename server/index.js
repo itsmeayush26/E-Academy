@@ -22,15 +22,17 @@ const app=express();
 
 const PORT =process.env.PORT || 3000;
 
+app.set("trust proxy", 1);
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin:"http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
+
 
 
 app.use("/api/v1/media", mediaRoute);
@@ -47,6 +49,6 @@ app.use("/api/v1/progress", courseProgressRoute);
 
 
 app.listen(PORT, ()=>{
-    console.log (`server listenning to port ${PORT}`)
+    console.log(`Server listening on port ${PORT}`);
 }
 )

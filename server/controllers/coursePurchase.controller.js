@@ -39,8 +39,9 @@ export const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `process.env.FRONTEND_URL/course-progress/${courseId}`, // once payment successful redirect to course progress page
-      cancel_url: `process.env.FRONTEND_URL/course-detail/${courseId}`,
+      success_url: `${process.env.FRONTEND_URL}/course-progress/${courseId}`, // once payment successful redirect to course progress page
+      cancel_url: `${process.env.FRONTEND_URL}/course-detail/${courseId}`,
+
       metadata: {
         courseId: courseId,
         userId: userId,
