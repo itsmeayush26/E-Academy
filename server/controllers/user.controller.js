@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { Course } from "../models/course.model.js";
 import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 import { generateToken } from "../utils/generateToken.js";
 import bcrypt from "bcryptjs";

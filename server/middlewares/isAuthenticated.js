@@ -11,7 +11,8 @@ const isAuthenticated = (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const secretKey = process.env.SECRET_KEY || "fallback_secret_key_lms";
+    const decoded = jwt.verify(token, secretKey);
 
     req.id = decoded.userId;
     next();

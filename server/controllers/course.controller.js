@@ -1,5 +1,6 @@
 import { Course } from "../models/course.model.js";
 import { Lecture } from "../models/lecture.model.js";
+import { User } from "../models/user.model.js";
 import {
   deleteMediaFromCloudinary,
   deleteVideoFromCloudinary,
@@ -107,6 +108,9 @@ export const getSearchCourse = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      message: "Failed to search courses",
+    });
   }
 };
 
