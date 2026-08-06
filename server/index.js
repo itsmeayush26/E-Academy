@@ -26,9 +26,24 @@ app.set("trust proxy", 1);
 
 app.use(express.json());
 app.use(cookieParser());
+const rawFrontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+const frontendUrl = rawFrontendUrl.replace(/\/$/, "");
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      const normalizedOrigin = origin.replace(/\/$/, "");
+      if (
+        normalizedOrigin === frontendUrl ||
+        normalizedOrigin === "http://localhost:5173" ||
+        normalizedOrigin === "http://localhost:3000" ||
+        normalizedOrigin.endsWith(".vercel.app")
+      ) {
+        return callback(null, origin);
+      }
+      return callback(null, origin);
+    },
     credentials: true,
   })
 );
