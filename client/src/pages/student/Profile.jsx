@@ -38,6 +38,14 @@ const Profile = () => {
     },
   ] = useUpdateUserMutation();
 
+  const user = data && data.user;
+
+  useEffect(() => {
+    if (user?.name) {
+      setName(user.name);
+    }
+  }, [user]);
+
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0];
     if (file) setProfilePhoto(file);
@@ -46,34 +54,32 @@ const Profile = () => {
   const updateUserHandler = async () => {
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("profilePhoto", profilePhoto);
+    if (profilePhoto) formData.append("profilePhoto", profilePhoto);
     await updateUser(formData);
   };
+
   useEffect(() => {
     refetch();
   }, []);
 
   useEffect(() => {
     if (isSuccess) {
-      refetch;
-      toast.success(data.message || "profile updated.");
+      refetch();
+      toast.success(updateUserData?.message || "Profile updated.");
     }
     if (isError) {
-      toast.error(error.message || "failed to update profile. ");
+      toast.error(error?.data?.message || error?.message || "Failed to update profile.");
     }
-  }, [isSuccess, isError, updateUserData, error]);
+  }, [isSuccess, isError, updateUserData, error, refetch]);
 
-  if (isLoading) return <h1>profile Loading...</h1>;
-  const user = data && data.user;
-
-  console.log(user);
+  if (isLoading) return <h1 className="text-center mt-20 text-xl">Loading Profile...</h1>;
 
   return (
     <div className="my-20 max-w-4xl mx-auto px-4">
       <h1 className="font-bold text-2xl text-center md:text-left"> Profile</h1>
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 my-8">
         <div className="flex flex-col items-center">
-          <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
+          <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4 overflow-hidden rounded-full border">
             <AvatarImage
               src={user?.photoUrl || "https://github.com/shadcn.png"}
               alt="@shadcn"
@@ -83,7 +89,7 @@ const Profile = () => {
         </div>
         <div>
           <div className="mb-2">
-            <h1 className="font-semibold text-gray-900 dar:text-gray-100 ">
+            <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Name:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
                 {user?.name}
@@ -91,18 +97,18 @@ const Profile = () => {
             </h1>
           </div>
           <div className="mb-2">
-            <h1 className="font-semibold text-gray-900 dar:text-gray-100 ">
+            <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Email:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                {user.email}
+                {user?.email}
               </span>
             </h1>
           </div>
           <div className="mb-2">
-            <h1 className="font-semibold text-gray-900 dar:text-gray-100 ">
+            <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Role:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                {user?.role.toUpperCase()}
+                {user?.role ? user.role.toUpperCase() : "STUDENT"}
               </span>
             </h1>
           </div>
@@ -164,7 +170,7 @@ const Profile = () => {
       <div>
         <h1 className="font-medium text-lg">Courses you're enrolled in</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
-          {user.enrolledCourses.length === 0 ? (
+          {!user?.enrolledCourses || user.enrolledCourses.length === 0 ? (
             <h1>You haven't enrolled yet</h1>
           ) : (
             user.enrolledCourses.map((course) => (

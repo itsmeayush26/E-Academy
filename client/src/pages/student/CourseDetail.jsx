@@ -28,14 +28,15 @@ const CourseDetail = () => {
   if (isLoading) return <h1>Loading...</h1>;
   if (isError) return <h>Failed to load course details</h>;
 
-  const { course, purchased } = data;
-  console.log(purchased);
+  const { course, purchased } = data || {};
 
   const handleContinueCourse = () => {
     if (purchased) {
       navigate(`/course-progress/${courseId}`);
     }
   };
+
+  const previewLecture = course?.lectures && course.lectures.length > 0 ? course.lectures[0] : null;
 
   return (
     <div className=" mt-10 space-y-5">
@@ -44,18 +45,18 @@ const CourseDetail = () => {
           <h1 className="font-bold text-2xl md:text-3xl">
             {course?.courseTitle}
           </h1>
-          <p className="text-base md:text-lg">Course Sub-title</p>
+          <p className="text-base md:text-lg">{course?.subTitle || "Comprehensive online course"}</p>
           <p>
             Created By{" "}
-            <span className="text-[#C0C4FC] underline italic">
-              {course?.creator?.name}
+            <span className="text-[#C0C4FC] underline italic ml-1">
+              {course?.creator?.name || "Instructor"}
             </span>
           </p>
           <div className="flex items-center gap-2 text-sm">
             <BadgeInfo size={16} />
-            <p>Last updated {course.createdAt.split("T")[0]}</p>
+            <p>Last updated {course?.createdAt ? course.createdAt.split("T")[0] : "Recently"}</p>
           </div>
-          <p>Students enrolled: {course?.enrolledStudents.length}</p>
+          <p>Students enrolled: {course?.enrolledStudents?.length || 0}</p>
         </div>
       </div>
       <div className="max-w-7xl mx-auto my-5 px-4 md:px-8 flex flex-col lg:flex-row justify-between gap-10">
@@ -63,19 +64,19 @@ const CourseDetail = () => {
           <h1 className="font-bold text-xl md:text-2xl">Description</h1>
           <p
             className="text-sm"
-            dangerouslySetInnerHTML={{ __html: course.description }}
+            dangerouslySetInnerHTML={{ __html: course?.description || "No description provided." }}
           />
 
           <Card>
             <CardHeader>
               <CardTitle>Course Content</CardTitle>
-              <CardDescription>4 lectures</CardDescription>
+              <CardDescription>{course?.lectures?.length || 0} lectures</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {course.lectures.map((lecture, idx) => (
+              {course?.lectures?.map((lecture, idx) => (
                 <div key={idx} className="flex items-center gap-3 text-sm">
                   <span>
-                    {true ? <PlayCircle size={14} /> : <Lock size={14} />}
+                    {lecture.isPreviewFree ? <PlayCircle size={14} /> : <Lock size={14} />}
                   </span>
                   <p>{lecture.lectureTitle}</p>
                 </div>
@@ -86,17 +87,23 @@ const CourseDetail = () => {
         <div className="w-full lg:w-1/3">
           <Card>
             <CardContent className="p-4 flex flex-col">
-              <div className="w-full aspect-video mb-4">
-                <ReactPlayer
-                  width="100%"
-                  height={"100%"}
-                  url={course.lectures[0].videoUrl}
-                  controls={true}
-                />
+              <div className="w-full aspect-video mb-4 bg-black/10 rounded overflow-hidden flex items-center justify-center">
+                {previewLecture?.videoUrl ? (
+                  <ReactPlayer
+                    width="100%"
+                    height={"100%"}
+                    url={previewLecture.videoUrl}
+                    controls={true}
+                  />
+                ) : (
+                  <p className="text-sm text-gray-500">No preview video available</p>
+                )}
               </div>
-              <h1>Lecture title</h1>
+              <h1 className="font-medium text-sm text-gray-700 dark:text-gray-300">
+                {previewLecture?.lectureTitle || "Preview Lecture"}
+              </h1>
               <Separator className="my-2" />
-              <h1 className="text-lg md:text-xl font-semibold">Course Price</h1>
+              <h1 className="text-lg md:text-xl font-semibold">₹{course?.coursePrice || 0}</h1>
             </CardContent>
             <CardFooter className="flex justify-center p-4">
               {purchased ? (

@@ -11,16 +11,16 @@ const Dashboard = () => {
 
   //destructructure purchased course
 
-  const purchasedCourse=data?.purchasedCourse ||[];
-  const courseData=purchasedCourse.map((course)=>({
-    name:course.courseId.courseTitle,
-    price:course.courseId.coursePrice,
-  }))
+  const purchasedCourse = data?.purchasedCourse || [];
+  const courseData = purchasedCourse
+    .filter((course) => course && course.courseId)
+    .map((course) => ({
+      name: course.courseId?.courseTitle || "Untitled Course",
+      price: course.courseId?.coursePrice || 0,
+    }));
   
-  const totalRevenue =purchasedCourse.reduce((acc,element)=> acc+(element.amount || 0) ,0)
-  const totalSales =purchasedCourse.length;
-
-
+  const totalRevenue = purchasedCourse.reduce((acc, element) => acc + (element.amount || 0), 0);
+  const totalSales = purchasedCourse.length;
 
   return (
     <div className="min-h-screen overflow-x-hidden px-4 sm:px-6 md:px-8 mt-20 md:mt-0">
@@ -45,7 +45,7 @@ const Dashboard = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="tesxt-3xl font-bold text-teal-600">{totalRevenue}</p>
+          <p className="text-3xl font-bold text-teal-600">₹{totalRevenue}</p>
         </CardContent>
       </Card>
 
