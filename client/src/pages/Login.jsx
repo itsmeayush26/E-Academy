@@ -22,10 +22,12 @@ import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [activeTab, setActiveTab] = useState("login");
   const [signupInput, setSignupInput] = useState({
     name: "",
     email: "",
     password: "",
+    role: "student",
   });
 
   const [loginInput, setLoginInput] = useState({
@@ -64,37 +66,46 @@ const Login = () => {
 
   const handleRegistration = async (type) => {
     const inputData = type === "signup" ? signupInput : loginInput;
+    if (type === "signup") {
+      if (!signupInput.name || !signupInput.email || !signupInput.password) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+    } else {
+      if (!loginInput.email || !loginInput.password) {
+        toast.error("Please enter email and password.");
+        return;
+      }
+    }
     const action = type === "signup" ? registerUser : loginUser;
     await action(inputData);
   };
 
   useEffect(() => {
     if (registerIsSuccess && registerData) {
-      toast.success(registerData.message || "Signup successfull");
+      toast.success(registerData.message || "Signup successful! Please login.");
+      setLoginInput((prev) => ({ ...prev, email: signupInput.email }));
+      setSignupInput({ name: "", email: "", password: "", role: "student" });
+      setActiveTab("login");
     }
     if (registerError) {
-      toast.error(registerError.data.message || "Signup failed");
+      toast.error(registerError?.data?.message || "Signup failed");
     }
+  }, [registerIsSuccess, registerData, registerError]);
 
+  useEffect(() => {
     if (loginIsSuccess && loginData) {
-      toast.success(loginData.message || "Login successfull");
+      toast.success(loginData.message || "Login successful!");
       navigate("/");
     }
     if (loginError) {
       toast.error(loginError?.data?.message || "Login failed");
     }
-  }, [
-    loginIsLoading,
-    registerIsLoading,
-    loginData,
-    registerData,
-    loginError,
-    registerError,
-  ]);
+  }, [loginIsSuccess, loginData, loginError, navigate]);
 
   return (
     <div className="flex items-center w-full justify-center mt-20">
-      <Tabs defaultValue="login" className="w-[400px]">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signup">Signup</TabsTrigger>
           <TabsTrigger value="login">Login</TabsTrigger>
@@ -108,13 +119,13 @@ const Login = () => {
                 Create a new account and click signup when you're done.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="space-y-3">
               <div className="space-y-1">
                 <Label htmlFor="name">Name</Label>
                 <Input
                   type="text"
                   name="name"
-                  value={signupInput?.name}
+                  value={signupInput.name}
                   onChange={(e) => changeInputHandler(e, "signup")}
                   placeholder="Eg-ayush"
                   required
@@ -125,7 +136,7 @@ const Login = () => {
                 <Input
                   type="email"
                   name="email"
-                  value={signupInput?.email}
+                  value={signupInput.email}
                   onChange={(e) => changeInputHandler(e, "signup")}
                   placeholder="Eg-abc@gmail.com"
                   required
@@ -136,21 +147,54 @@ const Login = () => {
                 <Input
                   type="password"
                   name="password"
-                  value={signupInput?.password}
+                  value={signupInput.password}
                   onChange={(e) => changeInputHandler(e, "signup")}
                   placeholder="Eg-xyz"
                   required
                 />
               </div>
+              <div className="space-y-1">
+                <Label>Role</Label>
+                <div className="flex gap-6 pt-1">
+                  <label className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="student"
+                      checked={signupInput.role === "student"}
+                      onChange={(e) =>
+                        setSignupInput({ ...signupInput, role: e.target.value })
+                      }
+                      className="cursor-pointer accent-primary"
+                    />
+                    Student
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="instructor"
+                      checked={signupInput.role === "instructor"}
+                      onChange={(e) =>
+                        setSignupInput({ ...signupInput, role: e.target.value })
+                      }
+                      className="cursor-pointer accent-primary"
+                    />
+                    Instructor
+                  </label>
+                </div>
+              </div>
             </CardContent>
             <CardFooter>
               <Button
+                className="w-full"
                 disabled={registerIsLoading}
                 onClick={() => handleRegistration("signup")}
               >
                 {registerIsLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-2 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating account...
                   </>
                 ) : (
                   "Signup"
@@ -166,10 +210,10 @@ const Login = () => {
             <CardHeader>
               <CardTitle>Login</CardTitle>
               <CardDescription>
-                Login your password here. After signup, you'll be logged in.
+                Welcome back! Enter your email and password to log in.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="space-y-3">
               <div className="space-y-1">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -195,12 +239,14 @@ const Login = () => {
             </CardContent>
             <CardFooter>
               <Button
+                className="w-full"
                 disabled={loginIsLoading}
                 onClick={() => handleRegistration("login")}
               >
                 {loginIsLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-2 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
                   </>
                 ) : (
                   "Login"

@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;``
+    const { name, email, password, role } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -20,10 +20,12 @@ export const register = async (req, res) => {
       });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
+    const userRole = role === "instructor" ? "instructor" : "student";
     await User.create({
       name,
       email,
       password: hashedPassword,
+      role: userRole,
     });
     return res.status(201).json({
       success: true,
@@ -71,10 +73,19 @@ export const login = async (req, res) => {
 };
 export const logout = async (req, res) => {
   try {
-    return res.status(200).cookie("token", "", { maxAge: 0 }).json({
-      message: "Logged out successfully.  ",
-      success: true,
-    });
+    const isProduction = process.env.NODE_ENV === "production";
+    return res
+      .status(200)
+      .cookie("token", "", {
+        maxAge: 0,
+        httpOnly: true,
+        sameSite: isProduction ? "none" : "lax",
+        secure: isProduction,
+      })
+      .json({
+        message: "Logged out successfully.",
+        success: true,
+      });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
