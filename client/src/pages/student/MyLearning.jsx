@@ -8,7 +8,7 @@ const MyLearning = () => {
 
   const{data, isLoading}= useLoadUserQuery();
   
-  const myLearning = data?.user.enrolledCourses ||[];
+  const myLearning = data?.user?.enrolledCourses || [];
   return (
     <div className="max-w-4xl mx-auto my-20 px-4 md:0">
       <h1 className="font-bold text-2xl">My Learning</h1>

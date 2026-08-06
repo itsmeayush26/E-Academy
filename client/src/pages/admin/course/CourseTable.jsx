@@ -82,26 +82,34 @@ const CourseTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.courses.map((course) => (
-            <TableRow key={course._id}>
-              <TableCell className="font-medium">
-                {course?.coursePrice || "NA"}
-              </TableCell>
-              <TableCell>
-                <Badge>{course.isPublished ? "Published" : "Draft"}</Badge>
-              </TableCell>
-              <TableCell>{course.courseTitle}</TableCell>
-              <TableCell className="text-right">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => navigate(`${course._id}`)}
-                >
-                  <Edit2 />
-                </Button>
+          {data?.courses && data.courses.length > 0 ? (
+            data.courses.map((course) => (
+              <TableRow key={course._id}>
+                <TableCell className="font-medium">
+                  {course?.coursePrice ? `₹${course.coursePrice}` : "NA"}
+                </TableCell>
+                <TableCell>
+                  <Badge>{course.isPublished ? "Published" : "Draft"}</Badge>
+                </TableCell>
+                <TableCell>{course.courseTitle}</TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => navigate(`${course._id}`)}
+                  >
+                    <Edit2 />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center py-4">
+                No courses found. Create one to get started!
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>

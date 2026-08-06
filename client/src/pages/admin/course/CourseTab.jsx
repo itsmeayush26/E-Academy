@@ -75,12 +75,12 @@ const CourseTab = () => {
   }, [courseByIdData]);
 
   const publishStatusHandler = async (action) => {
-    const response = await publishCourse({ courseId, query: action });
-    if (response.data) {
-      refetch();
-      toast.success(response.data, message);
-    }
     try {
+      const response = await publishCourse({ courseId, query: action });
+      if (response.data) {
+        refetch();
+        toast.success(response.data?.message || "Course published status updated");
+      }
     } catch (error) {
       toast.error("Failed to publish or unpublish course");
     }
@@ -161,15 +161,15 @@ const CourseTab = () => {
         </div>
         <div className="space-x-2  space-y-3 sm:space-y-3 md:space-y-3">
           <Button
-            disabled={courseByIdData?.course.lectures.length === 0}
+            disabled={!courseByIdData?.course?.lectures || courseByIdData.course.lectures.length === 0}
             variant="outline"
             onClick={() =>
               publishStatusHandler(
-                courseByIdData?.course.isPublished ? "false" : "true"
+                courseByIdData?.course?.isPublished ? "false" : "true"
               )
             }
           >
-            {courseByIdData?.course.isPublished ? "unpublished" : "publish"}
+            {courseByIdData?.course?.isPublished ? "Unpublish" : "Publish"}
           </Button>
           <Button>Remove Course</Button>
         </div>
